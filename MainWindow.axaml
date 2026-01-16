@@ -1,0 +1,222 @@
+<Window xmlns="https://github.com/avaloniaui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       x:Class="PackBot.MainWindow"
+       Width="1200" Height="700"
+       Background="Black">
+
+
+ <Window.Styles>
+   <!-- FORCE synlige knapper -->
+   <Style Selector="Button">
+     <Setter Property="Background" Value="#2E2E2E"/>
+     <Setter Property="Foreground" Value="White"/>
+     <Setter Property="BorderBrush" Value="#AAAAAA"/>
+     <Setter Property="BorderThickness" Value="1"/>
+     <Setter Property="Padding" Value="12,8"/>
+     <Setter Property="MinHeight" Value="36"/>
+     <Setter Property="HorizontalAlignment" Value="Left"/>
+     <Setter Property="Opacity" Value="1"/>
+     <Setter Property="IsVisible" Value="True"/>
+   </Style>
+
+
+   <!-- FORCE synlige checkboxes -->
+   <Style Selector="CheckBox">
+     <Setter Property="Foreground" Value="White"/>
+     <Setter Property="Opacity" Value="1"/>
+     <Setter Property="IsVisible" Value="True"/>
+   </Style>
+ </Window.Styles>
+
+
+
+
+ <Grid Margin="20" ColumnDefinitions="*,360" RowDefinitions="Auto,*,Auto">
+
+
+   <!-- HEADER -->
+   <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+              Text="PackBot - 62236"
+              FontSize="28"
+              FontWeight="Bold"
+              Foreground="White"
+              Margin="0,0,0,12"/>
+
+
+   <!-- LEFT CONTENT -->
+   <StackPanel Grid.Row="1" Grid.Column="0" Spacing="14">
+
+
+     <!-- Sensors -->
+     <StackPanel Spacing="6">
+       <TextBlock Text="Sensor inputs (robot)" Foreground="White" FontWeight="Bold"/>
+       <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto" Margin="0,4,0,0">
+         <TextBlock Grid.Row="0" Grid.Column="0" Text="DI3 (PE_350mm):" Foreground="White"/>
+         <TextBlock Grid.Row="0" Grid.Column="1" x:Name="Di3Text" Text="False" Foreground="White"/>
+
+
+         <TextBlock Grid.Row="1" Grid.Column="0" Text="DI7 (PE_100mm):" Foreground="White"/>
+         <TextBlock Grid.Row="1" Grid.Column="1" x:Name="Di7Text" Text="False" Foreground="White"/>
+       </Grid>
+     </StackPanel>
+
+
+     <!-- Decision -->
+     <StackPanel Spacing="6" Margin="0,8,0,0">
+       <TextBlock Text="Current decision" Foreground="White" FontWeight="Bold"/>
+       <TextBlock x:Name="DecisionText" Text="VENTER"
+                  FontSize="34" FontWeight="Bold" Foreground="White"/>
+       <TextBlock x:Name="RobotStateText" Text="State: Disconnected" Foreground="White"/>
+       <TextBlock x:Name="StepText" Text="Step: Wait (sensor condition)" Foreground="White"/>
+     </StackPanel>
+
+
+     <Separator Background="Gray" Margin="0,10,0,10"/>
+
+
+     <!-- Order -->
+     <StackPanel Spacing="8">
+       <TextBlock Text="Order (e-commerce / database)" Foreground="White" FontWeight="Bold"/>
+
+
+       <StackPanel Orientation="Horizontal" Spacing="8">
+         <TextBox x:Name="OrderIdBox" Width="200" Watermark="Order ID (fx 10452)"/>
+         <Button Content="Fetch" Click="FetchOrderClick"/>
+       </StackPanel>
+
+
+       <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4,0,0">
+         <TextBlock Grid.Row="0" Grid.Column="0" Text="Bag count:" Foreground="White"/>
+         <TextBlock Grid.Row="0" Grid.Column="1" x:Name="BagCountText" Text="—" Foreground="White"/>
+
+
+         <TextBlock Grid.Row="1" Grid.Column="0" Text="DB decision:" Foreground="White"/>
+         <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DbDecisionText" Text="—" Foreground="White"/>
+
+
+         <TextBlock Grid.Row="2" Grid.ColumnSpan="2" x:Name="VerificationText"
+                    Text="—" Foreground="White"/>
+       </Grid>
+     </StackPanel>
+
+
+     <Separator Background="Gray" Margin="0,10,0,10"/>
+
+
+     <!-- Log -->
+     <StackPanel Spacing="8">
+       <TextBlock Text="Log" Foreground="White" FontWeight="Bold"/>
+       <TextBox x:Name="LogText"
+                Height="220"
+                AcceptsReturn="True"
+                IsReadOnly="True"
+                TextWrapping="Wrap"/>
+     </StackPanel>
+
+
+   </StackPanel>
+
+
+   <!-- RIGHT SIDEBAR -->
+   <StackPanel Grid.Row="1" Grid.Column="1" Spacing="14">
+
+
+     <!-- Controls -->
+     <StackPanel Spacing="8">
+       <TextBlock Text="Controls" Foreground="White" FontWeight="Bold"/>
+
+
+       <StackPanel Orientation="Horizontal" Spacing="8">
+         <TextBox x:Name="IpBox" Width="200" Watermark="Robot IP (fx localhost)"/>
+         <TextBox x:Name="PortBox" Width="90" Watermark="30002"/>
+       </StackPanel>
+
+
+       <Button Content="Connect" Click="ConnectClick"/>
+       <Button Content="Start cycle" Click="StartClick"/>
+       <Button Content="Stop" Click="StopClick"/>
+     </StackPanel>
+
+
+     <Separator Background="Gray" Margin="0,6,0,6"/>
+
+
+     <!-- Manual -->
+     <StackPanel Spacing="8">
+       <TextBlock Text="Manual (til demo)" Foreground="White" FontWeight="Bold"/>
+       <Button Content="Simulate DI3/DI7 toggle" Click="SimulateSensorsClick"/>
+     </StackPanel>
+
+
+     <Separator Background="Gray" Margin="0,6,0,6"/>
+
+
+     <!-- Login -->
+     <StackPanel Spacing="6">
+       <TextBlock Text="Login" Foreground="White" FontWeight="Bold"/>
+       <TextBlock x:Name="LoginStateText" Text="Not logged in" Foreground="White"/>
+
+
+       <TextBox x:Name="LoginUsernameBox" Watermark="username"/>
+       <TextBox x:Name="LoginPasswordBox" Watermark="password" PasswordChar="•"/>
+
+
+       <StackPanel Orientation="Horizontal" Spacing="8">
+         <Button Content="Login" Click="LoginClick"/>
+         <Button Content="Logout" Click="LogoutClick"/>
+       </StackPanel>
+     </StackPanel>
+
+
+     <!-- USERS ADMIN -->
+     <Border BorderBrush="White" BorderThickness="1" CornerRadius="8" Padding="12">
+       <StackPanel x:Name="UsersAdminPanel" IsEnabled="False" Spacing="8">
+         <TextBlock Text="Users (admin only)" Foreground="White" FontWeight="Bold"/>
+
+
+         <TextBox x:Name="NewUsernameBox" Watermark="new username"/>
+         <TextBox x:Name="NewPasswordBox" Watermark="new password" PasswordChar="•"/>
+         <CheckBox x:Name="NewIsAdminBox" Content="Is admin" Foreground="White"/>
+
+
+         <Button Content="Register user" Click="RegisterUserClick"/>
+       </StackPanel>
+     </Border>
+
+
+     <!-- DB ADMIN -->
+     <Border BorderBrush="White" BorderThickness="1" CornerRadius="8" Padding="12">
+       <StackPanel x:Name="DbAdminPanel" IsEnabled="False" Spacing="8">
+         <TextBlock Text="Database tools (admin only)" Foreground="White" FontWeight="Bold"/>
+
+
+         <StackPanel Orientation="Horizontal" Spacing="8">
+           <TextBox x:Name="DbOrderIdBox" Width="120" Watermark="Order ID"/>
+           <TextBox x:Name="DbBagCountBox" Width="120" Watermark="BagCount"/>
+           <Button Content="Upsert" Click="DbUpsertClick"/>
+         </StackPanel>
+
+
+         <StackPanel Orientation="Horizontal" Spacing="8">
+           <Button Content="Seed demo orders" Click="DbSeedClick"/>
+           <Button Content="Reset DB" Click="DbResetClick"/>
+         </StackPanel>
+       </StackPanel>
+     </Border>
+
+
+     <TextBlock Text="Tip: default admin = admin / admin123"
+                Foreground="Gray"
+                Margin="0,6,0,0"/>
+   </StackPanel>
+
+
+   <!-- FOOTER -->
+   <TextBlock Grid.Row="2" Grid.ColumnSpan="2"
+              Text=""
+              Foreground="Gray"
+              Margin="0,12,0,0"/>
+ </Grid>
+</Window>
+
+
